@@ -102,7 +102,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
     
     func handlestudentLocationDetailsRespone(responseData: StudentLocationDetails?, error: Error?){
-        print("Inside handlestudentLocationDetailsRespone")
         if let responseData = responseData {
             Client.studentLocationDetails = responseData.results
             self.studentLocationDetails.results = responseData.results

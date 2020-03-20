@@ -57,7 +57,6 @@ class Client {
     }
     
     class func getStudentLocationDetails(limit: String, orderBy: String, completion: @escaping (StudentLocationDetails?, Error?) -> Void)  {
-        print(Endpoints.getStudentLocation(limit, orderBy).url)
         taskForGETRequest(url: Endpoints.getStudentLocation(limit, orderBy).url, responseType: StudentLocationDetails.self) { (responseData, error) in
             guard let responseData = responseData else {
                 completion(nil, error)

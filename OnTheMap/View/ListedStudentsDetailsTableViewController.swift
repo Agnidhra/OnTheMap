@@ -60,15 +60,14 @@ extension ListedStudentsDetailsTableViewController: UITableViewDataSource, UITab
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let url = URL(string: self.studentLocationDetails.results[indexPath.row].mediaURL) {
+        if let url = URL(string: self.studentLocationDetails.results[indexPath.row].mediaURL), UIApplication.shared.canOpenURL(url) {
            UIApplication.shared.open(url, options: [:], completionHandler: nil)
         } else {
-            self.present(AlertVC.getAlert(alertMessage: "Invalid Link"), animated: true)
+            self.present(AlertVC.getAlert(alertMessage: "Invalid Link. Full url missing."), animated: true)
         }
     }
     
     func handlestudentLocationDetailsRespone(responseData: StudentLocationDetails?, error: Error?){
-        print("Inside handlestudentLocationDetailsRespone")
         if let responseData = responseData {
             Client.studentLocationDetails.removeAll()
             self.studentLocationDetails.results.removeAll()
