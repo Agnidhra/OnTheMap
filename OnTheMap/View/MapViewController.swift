@@ -19,13 +19,13 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        studentLocationDetails.results = Client.studentLocationDetails
+        studentLocationDetails.results = StudentLocationDetailsData.studentLocationDetails
         UpdateAnotations()
      }
     
     @IBAction func tappedRefresh(_ sender: Any) {
         self.studentLocationDetails.results.removeAll()
-        Client.studentLocationDetails.removeAll()
+        StudentLocationDetailsData.studentLocationDetails.removeAll()
         Client.getStudentLocationDetails(limit: "100", orderBy: "-updatedAt", completion: handlestudentLocationDetailsRespone)
     }
     
@@ -41,7 +41,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             cookies.deleteCookie(cookie )
         }
         self.studentLocationDetails.results.removeAll()
-        Client.studentLocationDetails.removeAll()
+        StudentLocationDetailsData.studentLocationDetails.removeAll()
         Client.logOut()
         self.dismiss(animated: true, completion: nil)
     }
@@ -103,12 +103,12 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     func handlestudentLocationDetailsRespone(responseData: StudentLocationDetails?, error: Error?){
         if let responseData = responseData {
-            Client.studentLocationDetails = responseData.results
+            StudentLocationDetailsData.studentLocationDetails = responseData.results
             self.studentLocationDetails.results = responseData.results
             removeAllAnnotations()
             UpdateAnotations()
         } else {
-            self.present(AlertVC.getAlert(alertMessage: "Something Went Wrong, Hit Refresh."), animated: true)
+            self.present(getAlert(alertMessage: "Something Went Wrong, Hit Refresh."), animated: true)
         }
     }
     

@@ -71,9 +71,9 @@ class NewLocationOnMapViewController: UIViewController, MKMapViewDelegate {
     func handlePostStudentlocationResponse(postSuccessResponse: PostSuccessResponse?, failureResponse: FailureType?, error: Error?){
         guard  postSuccessResponse != nil else {
             if let failureResponse = failureResponse {
-                self.present(AlertVC.getAlert(alertMessage: failureResponse.error), animated: true)
+                self.present(getAlert(alertMessage: failureResponse.error), animated: true)
             } else {
-                self.present(AlertVC.getAlert(alertMessage: "Some Issue Try Again Latter"), animated: true)
+                self.present(getAlert(alertMessage: "Some Issue Try Again Latter"), animated: true)
             }
             return
         }

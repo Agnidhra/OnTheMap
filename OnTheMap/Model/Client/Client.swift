@@ -15,8 +15,6 @@ class Client {
         static var accountKey: String = ""
     }
     
-    static var studentLocationDetails : [Result] = []
-    
     enum Endpoints {
         static let basicURL = "https://onthemap-api.udacity.com/v1/"
         
@@ -62,13 +60,12 @@ class Client {
                 completion(nil, error)
                 return
             }
-            self.studentLocationDetails = responseData.results
+            StudentLocationDetailsData.studentLocationDetails = responseData.results
             completion(responseData, nil)
         }
     }
     
     class func postStudentLocation(latitude: Double, longitude: Double, address: String, mediaURL: String, completion: @escaping (PostSuccessResponse?, FailureType?, Error?)-> Void ) {
-        
         
         taskForPOSTRequest(url: Endpoints.postStudentLocation.url,
                            body: PostLocation(uniqueKey: "\(arc4random_uniform(5000))", firstName: "Gapuchi", lastName: "Papa", mapString: address, mediaURL: mediaURL, latitude: latitude, longitude: longitude),
@@ -82,8 +79,6 @@ class Client {
                                 completion(nil, failure, error)
                             }
         }
-
-        
     }
     
     
@@ -131,7 +126,6 @@ class Client {
         }
         task.resume()
     }
-    
     
     @discardableResult class func taskForGETRequest<ResponseType: Decodable>(url: URL, responseType: ResponseType.Type, completion: @escaping (ResponseType?, Error?) -> Void) -> URLSessionTask {
         let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
@@ -183,7 +177,4 @@ class Client {
         Client.deleteSession()
         
     }
-    
-    
-    
 }

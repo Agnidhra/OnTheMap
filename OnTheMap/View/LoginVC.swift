@@ -45,14 +45,14 @@ class LoginVC: UIViewController, LoginButtonDelegate {
         
         guard let userName = userNameTextField.text, let password = passwordTextField.text else {
             metCriteria = false
-            self.present(AlertVC.getAlert(alertMessage: "Invalid User Name or Password"), animated: true)
+            self.present(getAlert(alertMessage: "Invalid User Name or Password"), animated: true)
             setLoggingIn(false)
             return
         }
         
         if(!Utility.isValidEmail(email: userName)) {
             metCriteria = false
-            self.present(AlertVC.getAlert(alertMessage: "Invalid User Name or Password"), animated: true)
+            self.present(getAlert(alertMessage: "Invalid User Name or Password"), animated: true)
             setLoggingIn(false)
         }
         
@@ -72,13 +72,13 @@ class LoginVC: UIViewController, LoginButtonDelegate {
     func handleAuthResponse(callSuccess: Bool, errorMessage: String?, error: Error?) {
         if(callSuccess) {
             if let errorMessage = errorMessage {
-                self.present(AlertVC.getAlert(alertMessage: errorMessage), animated: true)
+                self.present(getAlert(alertMessage: errorMessage), animated: true)
                 setLoggingIn(false)
             } else {
                 Client.getStudentLocationDetails(limit: "100", orderBy: "-updatedAt", completion: handlestudentLocationDetailsRespone(responseData:error:))
             }
         } else {
-            self.present(AlertVC.getAlert(alertMessage: "Something Went Wrong, Try Again."), animated: true)
+            self.present(getAlert(alertMessage: "Something Went Wrong, Try Again."), animated: true)
             setLoggingIn(false)
         }
     }
@@ -86,15 +86,15 @@ class LoginVC: UIViewController, LoginButtonDelegate {
     func handlestudentLocationDetailsRespone(responseData: StudentLocationDetails?, error: Error?){
         setLoggingIn(false)
         if let responseData = responseData {
-            Client.studentLocationDetails.removeAll()
-            Client.studentLocationDetails = responseData.results
+            StudentLocationDetailsData.studentLocationDetails.removeAll()
+            StudentLocationDetailsData.studentLocationDetails = responseData.results
             userNameTextField.text = ""
             passwordTextField.text = ""
             performSegue(withIdentifier: "loginComplete", sender: nil)
         } else {
-            self.present(AlertVC.getAlert(alertMessage: "Something Went Wrong, Try Again."), animated: true)
+            self.present(getAlert(alertMessage: "Something Went Wrong, Try Again."), animated: true)
             LoginManager().logOut()
-            Client.studentLocationDetails.removeAll()
+            StudentLocationDetailsData.studentLocationDetails.removeAll()
             Client.logOut()
         }
     }
@@ -115,7 +115,7 @@ class LoginVC: UIViewController, LoginButtonDelegate {
             }
         }
         if error != nil {
-            self.present(AlertVC.getAlert(alertMessage: "Something Went Wrong, Try Again."), animated: true)
+            self.present(getAlert(alertMessage: "Something Went Wrong, Try Again."), animated: true)
         }
     }
     

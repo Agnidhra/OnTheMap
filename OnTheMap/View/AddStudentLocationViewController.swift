@@ -15,7 +15,7 @@ class AddStudentLocationViewController: UIViewController {
     @IBOutlet weak var placeTextField: UITextField!
     @IBOutlet weak var linkTextField: UITextField!
     @IBOutlet weak var findButton: UIButton!
-    
+    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     
     
     override func viewDidLoad() {
@@ -28,6 +28,7 @@ class AddStudentLocationViewController: UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         unsubscribeFromKeyBoardNotifications()
     }
     
@@ -37,32 +38,33 @@ class AddStudentLocationViewController: UIViewController {
     
     @IBAction func tappedFindButton(_ sender: Any) {
         guard let place = placeTextField.text, placeTextField.text?.count ?? 0 > 0 else {
-            self.present(AlertVC.getAlert(alertMessage: "Please enter the Place details."), animated: true)
+            self.present(getAlert(alertMessage: "Please enter the Place details."), animated: true)
             return
         }
         guard linkTextField.text != "" else {
-            self.present(AlertVC.getAlert(alertMessage: "Please enter the Link details."), animated: true)
+            self.present(getAlert(alertMessage: "Please enter the Link details."), animated: true)
             return
         }
         findGeoLocation(address: place)
     }
    
     func findGeoLocation(address: String){
-        
+        self.loadingIndicator.startAnimating()
         CLGeocoder().geocodeAddressString(address, completionHandler: {
             placemarks, error in
             
             if error != nil {
-                self.present(AlertVC.getAlert(alertMessage: "Invalid Location. Try again."), animated: true)
+                self.loadingIndicator.stopAnimating()
+                self.present(self.getAlert(alertMessage: "Invalid Location. Try again."), animated: true)
             } else {
                 let placemark = placemarks?.first
                 let vc = self.storyboard!.instantiateViewController(withIdentifier: "NewLocationOnMapViewController") as! NewLocationOnMapViewController
                 vc.pecker = placemark
                 vc.placeName = self.placeTextField.text
                 vc.mediaURL = self.linkTextField.text
+                self.loadingIndicator.stopAnimating()
                 self.navigationController?.pushViewController(vc, animated: true)
             }
-            
         })
     }
     

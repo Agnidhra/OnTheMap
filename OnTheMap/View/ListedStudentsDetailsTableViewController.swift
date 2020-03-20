@@ -18,20 +18,20 @@ class ListedStudentsDetailsTableViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.studentLocationDetails.results = Client.studentLocationDetails
+        self.studentLocationDetails.results = StudentLocationDetailsData.studentLocationDetails
     }
     
     @IBAction func tappedLogOutButton(_ sender: Any) {
         LoginManager().logOut()
         self.studentLocationDetails.results.removeAll()
-        Client.studentLocationDetails.removeAll()
+        StudentLocationDetailsData.studentLocationDetails.removeAll()
         Client.logOut()
         self.dismiss(animated: true, completion: nil)
     }
     
     @IBAction func tappedRefresh(_ sender: Any) {
         self.studentLocationDetails.results.removeAll()
-        Client.studentLocationDetails.removeAll()
+        StudentLocationDetailsData.studentLocationDetails.removeAll()
         Client.getStudentLocationDetails(limit: "100", orderBy: "-updatedAt", completion: handlestudentLocationDetailsRespone)
     }
 }
@@ -63,19 +63,19 @@ extension ListedStudentsDetailsTableViewController: UITableViewDataSource, UITab
         if let url = URL(string: self.studentLocationDetails.results[indexPath.row].mediaURL), UIApplication.shared.canOpenURL(url) {
            UIApplication.shared.open(url, options: [:], completionHandler: nil)
         } else {
-            self.present(AlertVC.getAlert(alertMessage: "Invalid Link. Full url missing."), animated: true)
+            self.present(getAlert(alertMessage: "Invalid Link. Full url missing."), animated: true)
         }
     }
     
     func handlestudentLocationDetailsRespone(responseData: StudentLocationDetails?, error: Error?){
         if let responseData = responseData {
-            Client.studentLocationDetails.removeAll()
+            StudentLocationDetailsData.studentLocationDetails.removeAll()
             self.studentLocationDetails.results.removeAll()
-            Client.studentLocationDetails = responseData.results
+            StudentLocationDetailsData.studentLocationDetails = responseData.results
             self.studentLocationDetails.results = responseData.results
             self.tableView.reloadData()
         } else {
-            self.present(AlertVC.getAlert(alertMessage: "Something Went Wrong, Hit Refresh."), animated: true)
+            self.present(getAlert(alertMessage: "Something Went Wrong, Hit Refresh."), animated: true)
         }
     }
 }
